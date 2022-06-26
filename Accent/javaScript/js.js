@@ -1,4 +1,16 @@
 const containerCARDS = document.querySelector("#containerCARDS");
+
+containerCARDS.addEventListener("click", event => {
+    let quemClickou = event.target;
+    let primeiroPai = quemClickou.parentNode;
+    let paiPricipal = primeiroPai.parentNode;
+    if (paiPricipal.classList.contains("click") == false) {
+        paiPricipal.classList.add("click");
+    } else {
+        paiPricipal.classList.remove("click");
+        paiPricipal.classList.add("clickDeNovo");
+    }
+})
 var numeroS = [];
 
 function sorteado(max, quant) {
@@ -10,35 +22,28 @@ function sorteado(max, quant) {
     }
 }
 
-console.log(numeroS);
 const pesquisa = async() => {
     var url = `https://rickandmortyapi.com/api/character/${numeroS}`;
     var dados = await fetch(url);
     var personagem = await dados.json();
-    criandoDiv(personagem);
+    criandoCards(personagem);
 };
 
-sorteado(826, 8);
+sorteado(826, 12);
 pesquisa();
 
-const criandoDiv = async(personagem) => {
+const criandoCards = async(personagem) => {
     personagem.map(function(personagem) {
-        console.log(personagem.image);
         containerCARDS.innerHTML += ` 
         
-        <div class="cards SlideADD">
-            <img src="${personagem.image}" alt="">
-            <h6>Nome</h6>
-            <p>${personagem.name}</p>
-            <h6>Status</h6>
-            <p>${personagem.status}</p>
-            <h6>Species</h6>
-            <p>${personagem.species}</p>
-            <h6>Type</h6>
-            <p>${personagem.type}</p>
-            <h6>Gender</h6>
-            <p>${personagem.gender}</p>
+        <div class="flipper">
+        <div class="front">
+         <img src="./Accent/images/card.jpg" alt="">
         </div>
+        <div class="back">
+          <img src="${personagem.image}" />
+        </div>
+      </div>
   
     `;
     });
