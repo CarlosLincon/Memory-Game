@@ -1,16 +1,66 @@
-const containerCARDS = document.querySelector("#containerCARDS");
+const memory_game = document.querySelector(".memory-game");
 var arryCards = [];
-containerCARDS.addEventListener("click", (event) => {
-    let quemClickou = event.target;
-    let primeiroPai = quemClickou.parentNode;
-    let paiPricipal = primeiroPai.parentNode;
-    if (paiPricipal.classList.contains("click") == false) {
-        paiPricipal.classList.add("click");
-    } else {
-        paiPricipal.classList.remove("click");
-        paiPricipal.classList.add("clickDeNovo");
+
+const cards = document.querySelectorAll('.memory-card');
+
+let hasFlippedCard = false;
+let lockBoard = false;
+let firstCard, secondCard;
+
+function flipCard(e) {
+    if (lockBoard) return;
+    if (e === firstCard) return;
+
+    e.classList.add('flip');
+
+    if (!hasFlippedCard) {
+        hasFlippedCard = true;
+        firstCard = e;
+        return;
     }
-});
+
+    secondCard = e;
+    lockBoard = true;
+
+    checkForMatch();
+}
+
+function checkForMatch() {
+    let isMatch = firstCard.dataset.name === secondCard.dataset.name;
+    isMatch ? disableCards() : unflipCards();
+}
+
+function disableCards() {
+    firstCard.removeEventListener('click', flipCard);
+    secondCard.removeEventListener('click', flipCard);
+
+    resetBoard();
+}
+
+function unflipCards() {
+    setTimeout(() => {
+        firstCard.classList.remove('flip');
+        secondCard.classList.remove('flip');
+
+        resetBoard();
+    }, 1500);
+}
+
+function resetBoard() {
+    [hasFlippedCard, lockBoard] = [false, false];
+    [firstCard, secondCard] = [null, null];
+}
+
+(function shuffle() {
+    cards.forEach(card => {
+        let ramdomPos = Math.floor(Math.random() * 12);
+        card.style.order = ramdomPos;
+    });
+})();
+
+cards.forEach(card => card.addEventListener('click', flipCard(card)));
+
+
 
 function embaralhar(array) {
     for (var i = array.length - 1; i > 0; i--) {
@@ -18,6 +68,8 @@ function embaralhar(array) {
         [array[i], array[j]] = [array[j], array[i]];
     }
 }
+
+
 
 function sorteado(max, quant) {
     let numeroS = [];
@@ -51,24 +103,26 @@ const addOsDadosNoArry = async(personagem) => {
         x++;
     }
     embaralhar(arryCards);
-    console.log(arryCards);
     criandoCards();
 };
 
 const criandoCards = () => {
     let i = 0;
     arryCards.map(function() {
-        containerCARDS.innerHTML += `
-        <div class="flipper">
-        <div class="front">
-         <img src="./Accent/images/card.jpg" alt="">
-        </div>
-        <div class="back">
-          <img src="${arryCards[i].image}" />
-        </div>
-        </div>
+        memory_game.innerHTML += `
+    
+        <div class="memory-card" data-name="${arryCards[i].name}">
+         <img class="front-face" src="${arryCards[i].image}" alt="Face da Carta">
+         <img class="back-face" src="./Accent/images/card.jpg" alt="Verso da Carta">
+       </div>
         
         `;
         i++;
     });
 };
+
+memory_game.addEventListener("click", (event) => {
+    let quemClickou = event.target;
+    let primeiroPai = quemClickou.parentNode;
+    flipCard(primeiroPai);
+})
