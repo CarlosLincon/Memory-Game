@@ -52,7 +52,7 @@
 
 .flipper.click .front {
     animation: virandoFront 1 1s;
-    transform: rotateY(180deg);
+    transform: rotateY(-180deg);
 }
 
 .flipper.click .back {

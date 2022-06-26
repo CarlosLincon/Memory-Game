@@ -17,7 +17,6 @@ function embaralhar(array) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
-
 }
 
 function sorteado(max, quant) {
@@ -36,7 +35,6 @@ const pesquisa = async() => {
     var dados = await fetch(url);
     var personagem = await dados.json();
     addOsDadosNoArry(personagem);
-    criandoCards();
 };
 
 pesquisa();
@@ -53,20 +51,24 @@ const addOsDadosNoArry = async(personagem) => {
         x++;
     }
     embaralhar(arryCards);
-}
-
+    console.log(arryCards);
+    criandoCards();
+};
 
 const criandoCards = () => {
-    containerCARDS.innerHTML += `
-
-    <div class="flipper">
-    <div class="front">
-     <img src="./Accent/images/card.jpg" alt="">
-    </div>
-    <div class="back">
-      <img src="${personagem.image}" />
-    </div>
-    </div>
-    
-    `;
+    let i = 0;
+    arryCards.map(function() {
+        containerCARDS.innerHTML += `
+        <div class="flipper">
+        <div class="front">
+         <img src="./Accent/images/card.jpg" alt="">
+        </div>
+        <div class="back">
+          <img src="${arryCards[i].image}" />
+        </div>
+        </div>
+        
+        `;
+        i++;
+    });
 };
